@@ -27,7 +27,7 @@ function Header() {
               <nav className='hidden md:flex space-x-8 w-full max-w-2xl justify-between'>
                   { 
                     navLinks.map( (link) => (
-                        <NavLink to={link.href} key={link.name} className="text-gray-700 hover:text-blue-600 transition font-medium">
+                        <NavLink to={link.href} key={link.name} className={({isActive}) => `text-gray-700 hover:text-blue-600 transition font-medium ${isActive ? 'text-[#33a0ff]' : 'text-gray-700' }`}>
                               {link.name}
                         </NavLink>
                     ) )

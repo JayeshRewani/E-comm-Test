@@ -8,7 +8,7 @@ import { Facebook, Twitter} from 'lucide-react'
 
 function Footer() {
   return (
-    <footer className='bg-[#BCDDFE] text-gray-700'>
+    <footer className='bg-[#BCDDFE] text-gray-700 py-20'>
         <div className='max-w-7xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10'>
 
             {/* brand info */}

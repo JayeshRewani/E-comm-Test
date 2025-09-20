@@ -4,10 +4,14 @@ import { ChevronUp } from 'lucide-react'
 
 function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpandedBrand, setIsExpandedBrand] = useState(true);
   const [selectedDeals, setSelectedDeals] = useState(new Set());
   const [showAll, setShowAll] = useState(false);
+  const [showAllBrands, setShowAllBrands] = useState(false);
   const [isPriceExpanded, setIsPriceExpanded] = useState(true);
   const [priceRange, setPriceRange] = useState([13.99, 25.99]);
+  const [selectedColor, setSelectedColor] = useState('blue');
+  const [selectedBrands, setSelectedBrands] = useState(new Set());
 
   const deals = [
     { name: 'Nike', count: 2 },
@@ -45,6 +49,37 @@ function Sidebar() {
 
         setPriceRange(newRange)
   }
+
+  const colors = [
+    { name: 'blue', class: 'bg-blue-500', value: '#3B82F6' },
+    { name: 'red', class: 'bg-red-500', value: '#EF4444' },
+    { name: 'black', class: 'bg-black', value: '#000000' },
+    { name: 'yellow', class: 'bg-yellow-400', value: '#FACC15' },
+    { name: 'pink', class: 'bg-pink-500', value: '#EC4899' },
+    { name: 'skieny', class: 'bg-[#efdfdf]', value: '#efdfdf' }
+  ];
+
+  const brands = [
+    { name: 'Nike', count: 99 },
+    { name: 'Nike', count: 99 },
+    { name: 'Adidas', count: 99 },
+    { name: 'Adidas', count: 99 },
+    { name: 'Siemens', count: 99 },
+  ];
+
+    const displayedBrands = showAllBrands ? brands : brands.slice(0,6);
+    const hasMoreBrands = brands.length > 6
+
+  const toggleBrands = (brandKey) => {
+    const newSelected = new Set(selectedBrands)
+    if(newSelected.has(brandKey)){
+        newSelected.delete(brandKey)
+    }else {
+        newSelected.add(brandKey)
+    }
+    setSelectedBrands(newSelected)
+  }
+
 
   return (
     <div className='space-y-6'>
@@ -93,7 +128,7 @@ function Sidebar() {
         {/* Price filter */}
         <div className='w-80 bg-[#f6f7f8] border rounded-md shadow-sm p-4'>
             <div className='flex justify-between px-2 py-4'>
-                <h3 className='font-medium'>Price</h3>
+                <h3 className='font-medium'>PRICE</h3>
                 <button onClick={() => setIsPriceExpanded(!isPriceExpanded)}>
                    <ChevronUp className={`transition-transform ${isPriceExpanded ? 'rotate-180': ''}`} size={20}/>
                 </button>
@@ -147,7 +182,78 @@ function Sidebar() {
             }
         </div>
         
+        {/* Color filter */}
+        <div className='w-80 bg-[#f6f7f8] border rounded-md shadow-sm px-4 py-1'>
+            <div className='px-2 py-4'>
+                <h3 className="font-medium mb-4">COLOR</h3>
+                <div className="flex items-center space-x-3">
+                    {colors.map((color) => (
+                    <button
+                        key={color.name}
+                        onClick={() => setSelectedColor(color.name)}
+                        className={`w-8 h-8 rounded-full border-2 transition-all duration-200 hover:scale-110 ${
+                        color.class
+                        } ${
+                        selectedColor === color.name
+                            ? 'border-gray-400 ring-2 ring-gray-300 ring-offset-2'
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                        aria-label={`Select ${color.name} color`}
+                    />
+                    ))}
+                </div>
+            </div>
+        </div>
+
+        {/* brands filter */}
+        <div className='w-80 bg-[#f6f7f8] border rounded-md shadow-sm p-4'>
+            <div className='flex justify-between px-2 py-4'>
+                <h3 className='font-medium'>Brands</h3>
+                <button onClick={() => setIsExpandedBrand(!isExpandedBrand)}>
+                   <ChevronUp className={`transition-transform ${isExpandedBrand ? 'rotate-180': ''}`} size={20}/>
+                </button>
+            </div>
+            {
+                isExpandedBrand && (
+                   <div className='py-2'>
+                        {
+                            displayedBrands.map( (brand,index) => {
+                                const brandKey = `${brand.name}-${index}`;
+                                const isSelected = selectedBrands.has(brandKey);
+
+                                return (
+                                    <div key={brandKey} onClick={() => toggleBrands(brandKey)} className={`flex items-center justify-between px-2 py-3 text-sm cursor-pointer transition-colors hover:bg-gray-50 ${isSelected ? 'text-[#33a0ff]' : ''}`}>
+                                        <span className={isSelected ? 'font-medium' : ''}>{brand.name}</span>
+                                        <span className={isSelected ? 'text-[#33a0ff] font-medium': ''}>{brand.count}</span>
+                                    </div>
+                                )
+                            })
+                        }
+                        {
+                            hasMoreBrands && (
+                                <div className='px-2 py-3 flex justify-center'>
+                                    <button className='text-sm hover:text-[#33a0ff] hover:underline underline-offset-2 font-medium transition-colors' 
+                                    onClick={() => setShowAllBrands(!showAllBrands)}
+                                    >
+                                        {showAllBrands ? 'Show Less' : `Show More (${brands.length - 6})`}
+                                    </button>
+                                </div>
+                            )
+                        }   
+                   </div>
+                )
+            }
+            
+
+        </div>
         
+        {/* More Option's */}
+        <div className='w-80 bg-[#f6f7f8] border rounded-md shadow-sm p-4'>
+            <div className='px-4'>
+                <h2 className='font-medium flex justify-center items-center text-xl'>MORE</h2>
+            </div>
+        </div>
+
     </div>
   )
 }
